@@ -1,39 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
-void dfs(int s,vector<int> adj[],bool visited[])
+int dis[100],fin[100],colour[100],parent[100],tim = 0;
+vector<int> adj[100];
+void dfs(int u)
 {
-    visited[s] = 1;
-    cout << s;
-    for(int i = 0;i < adj[s].size();i++)
+    tim = tim + 1;
+    colour[u] = 1;
+    dis[u] = tim;
+    for(int i = 0;i < adj[u].size();i++)
     {
-        if(visited[adj[s][i]] == 0)
+        int v = adj[u][i];
+        if(colour[v] == 0)
         {
-            dfs(adj[s][i],adj,visited);
+            parent[v] = u;
+            cout << u << " -> " << v << endl;
+            dfs(v);
         }
+        tim = tim + 1;
+        fin[v] = tim;
+        colour[v] = 2;
     }
-
+}
+void initialize(int vertex)
+{
+    int i;
+    for(i = 0;i < vertex;i++)
+    {
+        colour[i] = 0;
+        dis[i] = 99999;
+        fin[i] = 99999;
+        parent[i] = -1;
+    }
 }
 int main()
 {
-    bool visited[100];
-    for(int i = 0;i < 100;i++)
+    int vertex,edge,u,v,i,source;
+    cin >> vertex >>edge;
+    for(i = 0;i < edge;i++)
     {
-        visited[i] = 0;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-    int i,n,e,x,y,s;
-    cout << "Number of vertexes: ";
-    cin >> n;
-    vector <int> adj[n];
-    cout << "Number of total edges: ";
-    cin >> e;
-    for(i = 0;i < e;i++)
-    {
-        cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
-    }
-    cout << "Enter source vertex: ";
-    cin >> s;
-    dfs(s,adj,visited);
+    initialize(vertex);
+    cout << "Source node: ";
+    cin >> source;
+    dfs(source);
     return 0;
 }
